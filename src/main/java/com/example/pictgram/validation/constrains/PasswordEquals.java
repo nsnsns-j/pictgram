@@ -20,6 +20,7 @@ public @interface PasswordEquals {
 
     Class<?>[] groups() default {};
 
+
     Class<? extends Payload>[] payload() default {};
 
     @Target({ ElementType.TYPE })

@@ -16,6 +16,7 @@ import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Data;
 
@@ -42,12 +43,10 @@ public class User extends AbstractEntity implements UserDetails, UserInf {
 	}
 	
 	@Id
-//	@Idはプライマリキーとなるプロパティかフィールドを指定します
 	@SequenceGenerator(name = "user_id_seq")
-//	@GeneratedValueアノテーションのgenerator属性で指定された名前を指定する属性です。
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-//	テーブルのidentity列を利用して，主キー値を生成します。
 	private Long userId;
+//	sequence 連番でIdを作成　Identityで重複を避ける
 	
 	@Column(nullable = false, unique = true)
 	private String username;
