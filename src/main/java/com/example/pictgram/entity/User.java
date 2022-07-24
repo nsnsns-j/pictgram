@@ -66,26 +66,27 @@ public class User extends AbstractEntity implements UserDetails, UserInf {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority(authority.toString()));
 		return authorities;
+	}
 		
-//	@Override
-//	public boolean isAccountNoExpired() {
-//		return true;
-//	}
-//	
-//	@Override
-//	public boolean isAccontNonLocked() {
-//		return true;
-//	}
-//	
-//	@Override
-//	public boolean isCredentialsNonExpired() {
-//		return true;
-//	}
-//	
-//	@Override
-//	public boolean isEnable() {
-//		return true;
-//	}
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+	
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+	
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+	
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
  }
 	
-}
+
