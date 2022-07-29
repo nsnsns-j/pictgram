@@ -66,6 +66,7 @@ public class TopicsController {
 			TopicForm form = getTopic(user, entity);
 			list.add(form);
 		}
+		model.addAttribute("list", list);
 
 		return "topics/index";
 	}
@@ -91,7 +92,7 @@ public class TopicsController {
 				StringBuilder data = new StringBuilder();
 				data.append("data:");
 				data.append(getMimeType(entity.getPath()));
-				data.append(",base64,");
+				data.append(";base64,");
 
 				data.append(new String(Base64Utils.encode(os.toByteArray()), "ASCII"));
 				form.setImageData(data.toString());
@@ -124,7 +125,7 @@ public class TopicsController {
 
 	}
 
-	@GetMapping(path = "/topic/new")
+	@GetMapping(path = "/topics/new")
 	public String newTopic(Model model) {
 		model.addAttribute("form", new TopicForm());
 		return "topics/new";
@@ -137,7 +138,7 @@ public class TopicsController {
 			model.addAttribute("hasMessage", true);
 			model.addAttribute("class", "alert-danger");
 			model.addAttribute("message", "投稿に失敗しました。");
-			return "topic/new";
+			return "topics/new";
 		}
 
 		boolean isImageLocal = false;

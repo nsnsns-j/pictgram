@@ -37,6 +37,9 @@ public class Topic extends AbstractEntity implements Serializable{
 	@Column
 	private Double latitude;
 	
+	@Column
+    private Double longitude;
+	
 	@ManyToOne
 	@JoinColumn(name = "userId", insertable = false, updatable = false)
 	private User user;
