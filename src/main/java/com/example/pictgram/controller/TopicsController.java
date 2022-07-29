@@ -55,7 +55,7 @@ public class TopicsController {
 	@Value("${image.local:false}")
 	private String imageLocal;
 
-	@GetMapping(path = "/topic")
+	@GetMapping(path = "/topics")
 	public String index(Principal principal, Model model) throws IOException {
 		Authentication authentication = (Authentication) principal;
 		UserInf user = (UserInf) authentication.getPrincipal();
