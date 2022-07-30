@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -103,7 +104,6 @@ public class TopicsController {
 		form.setUser(userForm);
 
 		return form;
-
 	}
 
 	private String getMimeType(String path) {
@@ -122,7 +122,6 @@ public class TopicsController {
 			break;
 		}
 		return mimeType;
-
 	}
 
 	@GetMapping(path = "/topics/new")
@@ -147,8 +146,8 @@ public class TopicsController {
 		}
 
 		Topic entity = new Topic();
-		Authentication authenticaiton = (Authentication) principal;
-		UserInf user = (UserInf) authenticaiton.getPrincipal();
+		Authentication authentication = (Authentication) principal;
+		UserInf user = (UserInf) authentication.getPrincipal();
 		entity.setUserId(user.getUserId());
 		File destFile = null;
 		if (isImageLocal) {
