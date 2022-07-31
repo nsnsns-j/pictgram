@@ -20,7 +20,7 @@ import lombok.Data;
 @Table(name = "topic")
 @Data
 public class Topic extends AbstractEntity implements Serializable {
-	private static final long serialVesionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@SequenceGenerator(name = "topic_id_seq")
@@ -49,6 +49,8 @@ public class Topic extends AbstractEntity implements Serializable {
 	@OneToMany
 	@JoinColumn(name = "topicId", insertable = false, updatable = false)
 	private List<Favorite> favorites;
+}
+
 //	JPA でアソシエーションの設定を行うには、クラスのプロパティーに別のエンティティーを定義し、対応するアノテーションを指定します。
 //	今回は あるユーザー (User) が複数の投稿 (Topic) をする事ができるという、1 対多 の関係が成り立ちます。
 //	そのため、 Topic エンティティ内の user には ManyToOne アノテーションを指定しています。
@@ -56,5 +58,3 @@ public class Topic extends AbstractEntity implements Serializable {
 //	User エンティティを生成したときに、そのユーザーが投稿した全ての Topic エンティティを取得したい
 //	Topic エンティティを生成したときに、その投稿を行った User エンティティを取得したい
 //	このようなときに、 関連のあるテーブルの情報を、相互に取得することが簡単にできる機能 が アソシエーション です。
-
-}

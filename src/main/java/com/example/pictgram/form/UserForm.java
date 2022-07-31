@@ -4,7 +4,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import com.example.pictgram.validation.constrains.PasswordEquals;
+import com.example.pictgram.validation.constraints.PasswordEquals;
 
 import lombok.Data;
 

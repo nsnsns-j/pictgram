@@ -1,4 +1,4 @@
-package com.example.pictgram.validation.constrains;
+package com.example.pictgram.validation.constraints;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -11,15 +11,22 @@ import javax.validation.Payload;
 import javax.validation.ReportAsSingleViolation;
 
 @Documented
-@Constraint(validatedBy = ImageNotEmptyValidator.class)
-@Target({ ElementType.FIELD })
+@Constraint(validatedBy = PasswordEqualsValidator.class)
+@Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @ReportAsSingleViolation
-public @interface ImageNotEmpty {
-	
-	String message() default "{com.example.pictgram.validation.constraints.ImageNotEmpty.message}";
+public @interface PasswordEquals {
+	String message() default "{com.example.pictgram.validation.constraints.PasswordEquals.message}";
 
     Class<?>[] groups() default {};
 
+
     Class<? extends Payload>[] payload() default {};
+
+    @Target({ ElementType.TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    public @interface List {
+        PasswordEquals[] value();
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.pictgram.validation.constrains;
+package com.example.pictgram.validation.constraints;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -10,17 +10,15 @@ import javax.validation.Payload;
 import javax.validation.ReportAsSingleViolation;
 
 @Documented
-@Constraint(validatedBy = ImageByteValidator.class)
+@Constraint(validatedBy = ImageNotEmptyValidator.class)
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @ReportAsSingleViolation
-public @interface ImageByte {
+public @interface ImageNotEmpty {
 
-	String message() default "{com.example.pictgram.validation.constraints.ImageSize.message}";
+    String message() default "{com.example.pictgram.validation.constraints.ImageNotEmpty.message}";
 
-	Class<?>[] groups() default {};
+    Class<?>[] groups() default {};
 
-	Class<? extends Payload>[] payload() default {};
-
-	int max();
+    Class<? extends Payload>[] payload() default {};
 }

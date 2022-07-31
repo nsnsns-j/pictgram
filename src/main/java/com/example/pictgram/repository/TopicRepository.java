@@ -6,8 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.example.pictgram.entity.Topic;
 
 @Repository
-public interface TopicRepository extends JpaRepository<Topic, Long>{
-	
-	Iterable<Topic> findAllByOrderByUpdatedAtDesc();
+public interface TopicRepository extends JpaRepository<Topic, Long> {
 
+    Iterable<Topic> findAllByOrderByUpdatedAtDesc();
 }
