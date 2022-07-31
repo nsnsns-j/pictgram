@@ -11,11 +11,11 @@ import com.example.pictgram.entity.Favorite;
 @Repository
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
-	public Optional<Favorite> findById(String id);
+    public Optional<Favorite> findById(String id);
 
-	public List<Favorite> findByUserIdOrderByUpdatedAtDesc(Long userId);
+    public List<Favorite> findByUserIdOrderByUpdatedAtDesc(Long userId);
 
-	public List<Favorite> findByUserIdAndTopicId(Long userId, Long topicId);
+    public List<Favorite> findByUserIdAndTopicId(Long userId, Long topicId);
 
-	public void deleteByUserIdAndTopicId(long userId, long topicId);
+    public void deleteByUserIdAndTopicId(long userId, long topicId);
 }

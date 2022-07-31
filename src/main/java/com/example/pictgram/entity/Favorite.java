@@ -18,20 +18,20 @@ import lombok.Data;
 @Table(name = "favorite")
 @Data
 public class Favorite extends AbstractEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@SequenceGenerator(name = "favorite_id_seq")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @SequenceGenerator(name = "favorite_id_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(nullable = false)
-	private Long userId;
+    @Column(nullable = false)
+    private Long userId;
 
-	@Column(nullable = false)
-	private Long topicId;
+    @Column(nullable = false)
+    private Long topicId;
 
-	@ManyToOne
-	@JoinColumn(name = "topicId", insertable = false, updatable = false)
-	private Topic topic;
+    @ManyToOne
+    @JoinColumn(name = "topicId", insertable = false, updatable = false)
+    private Topic topic;
 }

@@ -10,7 +10,6 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,32 +28,32 @@ import com.example.pictgram.repository.FavoriteRepository;
 @Controller
 public class FavoritesController {
 
-	@Autowired
-	private MessageSource messageSource;
+    @Autowired
+    private MessageSource messageSource;
 
-	@Autowired
-	private FavoriteRepository repository;
+    @Autowired
+    private FavoriteRepository repository;
 
-	@Autowired
-	private TopicsController topicsController;
+    @Autowired
+    private TopicsController topicsController;
 
-	@GetMapping(path = "/favorites")
-	public String index(Principal principal, Model model) throws IOException {
-		Authentication authentication = (Authentication) principal;
-		UserInf user = (UserInf) authentication.getPrincipal();
-		List<Favorite> topics = repository.findByUserIdOrderByUpdatedAtDesc(user.getUserId());
-		List<TopicForm> list = new ArrayList<>();
-		for (Favorite entity : topics) {
-			Topic topicEntity = entity.getTopic();
-			TopicForm form = topicsController.getTopic(user, topicEntity);
-			list.add(form);
-		}
-		model.addAttribute("list", list);
+    @GetMapping(path = "/favorites")
+    public String index(Principal principal, Model model) throws IOException {
+        Authentication authentication = (Authentication) principal;
+        UserInf user = (UserInf) authentication.getPrincipal();
+        List<Favorite> topics = repository.findByUserIdOrderByUpdatedAtDesc(user.getUserId());
+        List<TopicForm> list = new ArrayList<>();
+        for (Favorite entity : topics) {
+            Topic topicEntity = entity.getTopic();
+            TopicForm form = topicsController.getTopic(user, topicEntity);
+            list.add(form);
+        }
+        model.addAttribute("list", list);
 
-		return "topics/index";
-	}
+        return "topics/index";
+    }
 
-	@RequestMapping(value = "/favorite", method = RequestMethod.POST)
+    @RequestMapping(value = "/favorite", method = RequestMethod.POST)
     public String create(Principal principal, @RequestParam("topic_id") long topicId, RedirectAttributes redirAttrs,
             Locale locale) {
         Authentication authentication = (Authentication) principal;
@@ -76,25 +75,26 @@ public class FavoritesController {
         return "redirect:/topics";
     }
 
-	@RequestMapping(value = "/favorite", method = RequestMethod.DELETE)
-	@Transactional
-	public String destroy(Principal principal, @RequestParam("topic_id") long topicId, RedirectAttributes redirAttrs,
-			Locale locale) {
-		Authentication authentication = (Authentication) principal;
-		UserInf user = (UserInf) authentication.getPrincipal();
-		Long userId = user.getUserId();
-		List<Favorite> results = repository.findByUserIdAndTopicId(userId, topicId);
-		if (results.size() == 1) {
-			repository.deleteByUserIdAndTopicId(user.getUserId(), topicId);
+    @RequestMapping(value = "/favorite", method = RequestMethod.DELETE)
+    @Transactional
+    public String destroy(Principal principal, @RequestParam("topic_id") long topicId, RedirectAttributes redirAttrs,
+            Locale locale) {
+        Authentication authentication = (Authentication) principal;
+        UserInf user = (UserInf) authentication.getPrincipal();
+        Long userId = user.getUserId();
+        List<Favorite> results = repository.findByUserIdAndTopicId(userId, topicId);
+        if (results.size() == 1) {
+            repository.deleteByUserIdAndTopicId(user.getUserId(), topicId);
 
-			redirAttrs.addFlashAttribute("hasMessage", true);
-			redirAttrs.addFlashAttribute("class", "alert-info");
-			redirAttrs.addFlashAttribute("message",
-					messageSource.getMessage("favorites.destroy.flash", new String[] {}, locale));
-		}
-		return "redirect:/topics";
-	}
+            redirAttrs.addFlashAttribute("hasMessage", true);
+            redirAttrs.addFlashAttribute("class", "alert-info");
+            redirAttrs.addFlashAttribute("message",
+                    messageSource.getMessage("favorites.destroy.flash", new String[] {}, locale));
+        }
+        return "redirect:/topics";
+    }
 }
+
 // /favarites の呼び出しで index メソッドはお気に入り一覧画面を表示します。
 //
 //  /favariteの呼び出しでは 2 つのメソッドを用意しています。
