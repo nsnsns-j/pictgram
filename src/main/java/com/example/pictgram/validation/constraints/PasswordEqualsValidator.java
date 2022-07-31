@@ -1,4 +1,4 @@
-package com.example.pictgram.validation.constrains;
+package com.example.pictgram.validation.constraints;
 
 import java.util.Objects;
 

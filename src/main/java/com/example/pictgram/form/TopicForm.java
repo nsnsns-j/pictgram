@@ -7,8 +7,8 @@ import javax.validation.constraints.Size;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.pictgram.validation.constrains.ImageByte;
-import com.example.pictgram.validation.constrains.ImageNotEmpty;
+import com.example.pictgram.validation.constraints.ImageByte;
+import com.example.pictgram.validation.constraints.ImageNotEmpty;
 
 import lombok.Data;
 

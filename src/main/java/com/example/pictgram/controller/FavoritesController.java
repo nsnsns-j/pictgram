@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,26 +55,26 @@ public class FavoritesController {
 	}
 
 	@RequestMapping(value = "/favorite", method = RequestMethod.POST)
-	public String create(Principal principal, @RequestParam("topic_id") long topicId, RedirectAttributes redirAttrs,
-			Locale locale) {
-		Authentication authentication = (Authentication) principal;
-		UserInf user = (UserInf) authentication.getPrincipal();
-		Long userId = user.getUserId();
-		List<Favorite> result = repository.findByUserIdAndTopicId(userId, topicId);
-		if (result.size() == 0) {
-			Favorite entity = new Favorite();
-			entity.setUserId(userId);
-			entity.setTopicId(topicId);
-			repository.saveAndFlush(entity);
+    public String create(Principal principal, @RequestParam("topic_id") long topicId, RedirectAttributes redirAttrs,
+            Locale locale) {
+        Authentication authentication = (Authentication) principal;
+        UserInf user = (UserInf) authentication.getPrincipal();
+        Long userId = user.getUserId();
+        List<Favorite> results = repository.findByUserIdAndTopicId(userId, topicId);
+        if (results.size() == 0) {
+            Favorite entity = new Favorite();
+            entity.setUserId(userId);
+            entity.setTopicId(topicId);
+            repository.saveAndFlush(entity);
 
-			redirAttrs.addFlashAttribute("hasMessage", true);
-			redirAttrs.addFlashAttribute("class", "alert-info");
-			redirAttrs.addFlashAttribute("message",
-					messageSource.getMessage("favorites.create.flash", new String[] {}, locale));
-		}
+            redirAttrs.addFlashAttribute("hasMessage", true);
+            redirAttrs.addFlashAttribute("class", "alert-info");
+            redirAttrs.addFlashAttribute("message",
+                    messageSource.getMessage("favorites.create.flash", new String[] {}, locale));
+        }
 
-		return "redirect:/topics";
-	}
+        return "redirect:/topics";
+    }
 
 	@RequestMapping(value = "/favorite", method = RequestMethod.DELETE)
 	@Transactional
@@ -93,7 +94,6 @@ public class FavoritesController {
 		}
 		return "redirect:/topics";
 	}
-
 }
 // /favarites の呼び出しで index メソッドはお気に入り一覧画面を表示します。
 //

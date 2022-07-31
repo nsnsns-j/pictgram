@@ -34,13 +34,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.pictgram.entity.Favorite;
 import com.example.pictgram.entity.Topic;
 import com.example.pictgram.entity.UserInf;
-import com.example.pictgram.form.FavoriteForm;
 import com.example.pictgram.form.TopicForm;
 import com.example.pictgram.form.UserForm;
 import com.example.pictgram.repository.TopicRepository;
+import com.example.pictgram.entity.Favorite;
+import com.example.pictgram.form.FavoriteForm;
 
 @Controller
 public class TopicsController {
@@ -84,7 +84,6 @@ public class TopicsController {
 		modelMapper.typeMap(Topic.class, TopicForm.class).addMappings(mapper -> mapper.skip(TopicForm::setFavorites));
 		modelMapper.typeMap(Favorite.class, FavoriteForm.class)
 				.addMappings(mapper -> mapper.skip(FavoriteForm::setTopic));
-
 		boolean isImageLocal = false;
 		if (imageLocal != null) {
 			isImageLocal = new Boolean(imageLocal);
@@ -106,16 +105,6 @@ public class TopicsController {
 
 				data.append(new String(Base64Utils.encode(os.toByteArray()), "ASCII"));
 				form.setImageData(data.toString());
-
-				List<FavoriteForm> favorites = new ArrayList<FavoriteForm>();
-				for (Favorite favoriteEntity : entity.getFavorites()) {
-					FavoriteForm favorite = modelMapper.map(favoriteEntity, FavoriteForm.class);
-					favorites.add(favorite);
-					if (user.getUserId().equals(favoriteEntity.getUserId())) {
-						form.setFavorite(favorite);
-					}
-				}
-				form.setFavorites(favorites);
 			}
 		}
 
@@ -130,6 +119,7 @@ public class TopicsController {
 				form.setFavorite(favorite);
 			}
 		}
+		form.setFavorites(favorites);
 
 		return form;
 	}
