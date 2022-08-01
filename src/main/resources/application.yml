@@ -8,4 +8,4 @@ spring:
       max-file-size: 20MB
       max-request-size: 20MB  
 image:
-    local:true
+    local: true
