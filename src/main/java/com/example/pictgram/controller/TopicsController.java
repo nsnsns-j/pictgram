@@ -230,8 +230,8 @@ public class TopicsController {
 	}
 	
 	private String saveImageS3(MultipartFile image, Topic entity)throws IOException{
-		String path = "uploads/topics/image/" + entity.getId() + "/" + image.getOriginalFilename();
-		s3.upload(image.getInputStream(),path);
+		String path = "uploads/topic/image/" + entity.getId() + "/" + image.getOriginalFilename();
+		s3.upload(image.getInputStream(), path);
 		String fileName = image.getOriginalFilename();
 		File destFile = File.createTempFile("s3_",".tmp");
 		image.transferTo(destFile);
