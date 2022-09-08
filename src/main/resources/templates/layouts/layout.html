@@ -38,18 +38,11 @@
 		th:src="@{/scripts/method-convert.js}"></script>
 	<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
 	<!--↓Web Configurationの 7. Add Code Site の「COPY CODE」ボタンでコピーしたコードを編集したものです。-->
-	<!-- インライン処理 という機能では変数式を埋め込むことができます。
-	<XXX th:inline="text">
-       [[${変数式}]]
-    </XXX> 
-    
-    JavaScript への変数式の埋め込みは次のように記述します。
-埋め込む変数式は /* */ で囲い、コメントアウトします。
-<XXX th:inline="javascript">
-  /*[[${変数式}]]*/
-</XXX>
-変数式 onesignal.id には application.yml の onesignal.id から取り出した環境変数の値を設定します。-->
-	
+	<!-- インライン処理 という機能では変数式を埋め込むことができます。-->
+	<!--JavaScript への変数式の埋め込みは次のように記述します。 埋め込む変数式は /* */ で囲い、コメントアウトします。
+	変数式 onesignal.id には application.yml の onesignal.id
+	から取り出した環境変数の値を設定します。-->
+
 	<script>
 		window.OneSignal = window.OneSignal || [];
 		OneSignal.push(function() {
