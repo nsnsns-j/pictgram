@@ -1,33 +1,65 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 
 <head>
-	<meta charaset="UTF-8">
-	<meta name="viewport" content="width-devuce-width, initian-scale-1.0">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
-	<link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
-	<title>Pictgram</title>
+<meta charaset="UTF-8">
+<meta name="viewport" content="width-devuce-width, initian-scale-1.0">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+<link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+<title>Pictgram</title>
 </head>
 
 <body>
-	<div th:if="${hasMessage}" class="alert alert-dismissible fade show" th:classappend="${class}" role='alert'>
-		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button><span
-			th:text="${message}"></span>
+	<div th:if="${hasMessage}" class="alert alert-dismissible fade show"
+		th:classappend="${class}" role='alert'>
+		<button type="button" class="btn-close" data-bs-dismiss="alert"
+			aria-label="Close"></button>
+		<span th:text="${message}"></span>
 	</div>
 	<nav layout:replace="~{layouts/common :: nav}"></nav>
 	<div layout:fragment="contents"></div>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
 		crossorigin="anonymous"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script src="/scripts/method-convert.js" th:src="@{/scripts/method-convert.js}"></script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="/scripts/method-convert.js"
+		th:src="@{/scripts/method-convert.js}"></script>
+	<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+	<!--↓Web Configurationの 7. Add Code Site の「COPY CODE」ボタンでコピーしたコードを編集したものです。-->
+	<!-- インライン処理 という機能では変数式を埋め込むことができます。
+	<XXX th:inline="text">
+       [[${変数式}]]
+    </XXX> 
+    
+    JavaScript への変数式の埋め込みは次のように記述します。
+埋め込む変数式は /* */ で囲い、コメントアウトします。
+<XXX th:inline="javascript">
+  /*[[${変数式}]]*/
+</XXX>
+変数式 onesignal.id には application.yml の onesignal.id から取り出した環境変数の値を設定します。-->
+	
 	<script>
-		$(function () {
+		window.OneSignal = window.OneSignal || [];
+		OneSignal.push(function() {
+			OneSignal.init({
+				appId : /*[[${@environment.getProperty('onesignal.id')}]]*/,
+			});
+		});
+	</script>
+	<script>
+		$(function() {
 			convertMethod('.convert');
 			$(".alert").fadeOut(5000);
 		});
