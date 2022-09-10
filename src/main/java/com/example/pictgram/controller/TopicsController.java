@@ -1,5 +1,6 @@
 package com.example.pictgram.controller;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,8 +13,15 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.html.HTML.Tag;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.sanselan.ImageReadException;
+import org.apache.sanselan.Sanselan;
+import org.apache.sanselan.common.IImageMetadata;
+import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
+import org.apache.sanselan.formats.tiff.TiffImageMetadata.GPSInfo;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +43,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.context.Context;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
 import com.example.pictgram.entity.Comment;
 import com.example.pictgram.entity.Favorite;
 import com.example.pictgram.entity.Topic;
@@ -177,7 +189,7 @@ public class TopicsController {
 	@RequestMapping(value = "/topic", method = RequestMethod.POST)
 	public String create(Principal principal, @Validated @ModelAttribute("form") TopicForm form, BindingResult result,
 			Model model, @RequestParam MultipartFile image, RedirectAttributes redirAttrs, Locale locale)
-			throws IOException {
+			throws ImageProcessingException, IOException, ImageReadException {
 		if (result.hasErrors()) {
 			model.addAttribute("hasMessage", true);
 			model.addAttribute("class", "alert-danger");
@@ -224,7 +236,7 @@ public class TopicsController {
 		return "redirect:/topics";
 	}
 
-	private File saveImageLocal(MultipartFile image, Topic entity) throws IOException {
+	private File saveImageLocal(MultipartFile image, Topic entity) throws IOException, ImageProcessingException, ImageReadException {
 		File uploadDir = new File("/uploads");
 		uploadDir.mkdir();
 
@@ -236,22 +248,83 @@ public class TopicsController {
 		String fileName = image.getOriginalFilename();
 		File destFile = new File(realPathToUploads, fileName);
 		image.transferTo(destFile);
+		
+		setGeoInfo(entity, destFile, image.getOriginalFilename());
 
 		return destFile;
 	}
 
-	private String saveImageS3(MultipartFile image, Topic entity) throws IOException {
+	private String saveImageS3(MultipartFile image, Topic entity) throws IOException, ImageProcessingException, ImageReadException {
 		String path = "uploads/topic/image/" + entity.getId() + "/" + image.getOriginalFilename();
 		s3.upload(image.getInputStream(), path);
 		String fileName = image.getOriginalFilename();
 		File destFile = File.createTempFile("s3_", ".tmp");
 		image.transferTo(destFile);
+		
+		setGeoInfo(entity, destFile, fileName);
 
 		String url = "https://" + awsBucket + ".s3-" + awsDefaultRegion + ".amazonaws.com/" + path;
 
 		return url;
 	}
 
+//	以下画像に付与された位置情報の取得
+	private void setGeoInfo(Topic entity, Metadata metadata2, BufferedInputStream inputStream, String fileName)
+			throws ImageProcessingException, IOException, ImageReadException {
+		Metadata metadata = ImageMetadataReader.readMetadata(inputStream);
+		setGeoInfo(entity, metadata, inputStream, null, fileName);
+	}
+
+	private void setGeoInfo(Topic entity, File destFile, String fileName)
+			throws ImageProcessingException, IOException, ImageReadException {
+		Metadata metadata = ImageMetadataReader.readMetadata(destFile);
+		setGeoInfo(entity, metadata, null, destFile, fileName);
+	}
+
+	private void setGeoInfo(Topic entity, Metadata metadata, BufferedInputStream inputStream, File destFile,
+			String fileName) {
+if(log.isDebugEnabled()) {
+	for(Directory directory : metadata.getDirectories()) {
+		for (com.drew.metadata.Tag tag : directory.getTags()) {
+			log.debug("{} {}", tag.toString(), tag.getTagType());
+			
+		}
+	}
+}
+
+try {
+	IImageMetadata iMetadata = null;
+	if(inputStream != null) {
+		iMetadata = Sanselan.getMetadata(inputStream, fileName);
+		IOUtils.closeQuietly(inputStream);
+	}
+	
+	if(destFile != null) {
+		iMetadata = Sanselan.getMetadata(destFile);
+	}
+	
+	if (iMetadata != null) {
+		GPSInfo gpsInfo = null;
+		if(iMetadata instanceof JpegImageMetadata) {
+		gpsInfo = ((JpegImageMetadata) iMetadata).getExif().getGPS();
+		if (gpsInfo != null) {
+			log.debug("latitude={}", gpsInfo.getLatitudeAsDegreesNorth());
+			log.debug("longitude={}", gpsInfo.getLongitudeAsDegreesEast());
+			entity.setLatitude(gpsInfo.getLatitudeAsDegreesNorth());
+			entity.setLongitude(gpsInfo.getLongitudeAsDegreesEast());
+		}
+	}else {
+		List<?> items = iMetadata.getItems();
+		for(Object item : items) {
+			log.debug(item.toString());
+		}
+	}
+}
+	}catch (ImageReadException | IOException e) {
+		log.warn(e.getMessage(), e);
+	}
+
+	}
 }
 // /topics の呼び出しで index メソッドは話題一覧画面を表示します。
 //
