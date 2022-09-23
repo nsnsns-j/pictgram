@@ -341,7 +341,7 @@ public class TopicsController {
 //	TopicCsv データの文字列がそのままレスポンスとなり、ダウンロードすることができます。
 
 	@RequestMapping(value = "/topics/topic.csv", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
-			+ "; charaset=UTF8; Content-Disposition: attachment")
+			+ "; charaset=UTF-8; Content-Disposition: attachment")
 	@ResponseBody
 	public Object downloadCsv() throws IOException {
 		Iterable<Topic> topics = repository.findAll();

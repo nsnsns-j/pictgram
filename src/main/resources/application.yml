@@ -22,6 +22,16 @@ spring:
             enable: true
   tymeleaf:
     check-template-location: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${google.client.id}
+            client-secret: ${google.client.secret}
+          github:
+            client-id: ${github.client.id}
+            clientSecret: ${github.client.secret}
 cloud:
   aws:
     stack:
