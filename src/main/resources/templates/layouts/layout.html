@@ -30,6 +30,17 @@
 	</div>
 	<nav layout:replace="~{layouts/common :: nav}"></nav>
 	<div layout:fragment="contents"></div>
+	<footer class="footer" th:if="${hasFooter}">
+		<div class="container">
+			<div class="row">
+				<!--広告の HTML コードを含むテキストを th:text 属性で出力すると HTML タグはエスケープされます。
+				そのため、テキストに含まれる HTML ソースがそのまま表示されます。
+				エスケープ処理しない (アンエスケープ) でテキストを出力する場合には th:utext 属性を使います。
+				HTML コードは解釈されるため、広告が正しく表示されます。-->
+				<div class="col-mb-4" th:each="tag : ${tags}" th:utext="${tag}"></div>
+			</div>
+		</div>
+	</footer>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
